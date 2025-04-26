@@ -51,14 +51,23 @@ int fsm_int(int state, char c); // used for integer constants
 int fsm_com(int state, char c); // used for block comments
 int fsm_bs(int state, char c); // used for string constants, has the feature of backslash working
 
-// parser functions:
-// plan to have them return the new index of the token list
-// they take in the pointer to the parse vector so they can update it within the function
+/*
+parser functions:
+plan to have them return the new index of the token list
+they take in the pointer to the parse vector so they can update it within the function
+*/
+
+// Program Structure:
 int parseClass(vector<Node>* parse, vector<Token> tokens, int idx);
 int parseClassVarDec(vector<Node>* parse, vector<Token> tokens, int idx);
 int parseSubroutineDec(vector<Node>* parse, vector<Token> tokens, int idx);
 int parseParameterList(vector<Node>* parse, vector<Token> tokens, int idx);
 int parseSubroutineBody(vector<Node>* parse, vector<Token> tokens, int idx);
+int parseVarDec(vector<Node>* parse, vector<Token> tokens, int idx);
+
+// Statements:
+
+
 
 void tests();
 
@@ -360,13 +369,60 @@ int parseParameterList(vector<Node>* parse, vector<Token> tokens, int idx){
         return idx;
     }
 
-    // 
+    // type varName
     for (int i = 0; i < 2; i += 1){
         newParse.vals.push_back(Node(tokens[idx]));
         idx += 1;
     }
+
+    // if there are more parameters in the parameterList:
+    while (!strEq(tokens[idx].tok, ")")){
+        // ',' type varName
+        for (int i = 0; i < 3; i += 1){
+            newParse.vals.push_back(Node(tokens[idx]));
+            idx += 1;
+        }
+    }
+
+    (*parse).push_back(newParse);
+
+    return idx;
 }
 
+int parseSubroutineBody(vector<Node>* parse, vector<Token> tokens, int idx){
+    Node newParse = Node("subroutineBody");
+
+    // the opening '{'
+    newParse.vals.push_back(Node(tokens[idx]));
+    idx += 1;
+
+    // variable declarations:
+    while (strEq(tokens[idx].tok, "var")){
+        idx = parseVarDec(&newParse.vals, tokens, idx);
+    }
+
+    // parsing all the statements
+    idx = parseStatements(&newParse.vals, tokens, idx);
+
+    // the closing '}'
+}
+
+int parseVarDec(vector<Node>* parse, vector<Token> tokens, int idx){
+    Node newParse = Node("varDec");
+
+    // 'var' type varName
+    for (int i = 0; i < 3; i += 1){
+        newParse.vals.push_back(Node(tokens[idx]));
+        idx += 1;
+    }
+
+    // if there is more than one variable declared:
+    while (strEq()
+
+    // the ending ';'
+    newParse.vals.push_back(Node(tokens[idx]));
+    idx += 1;
+}
 
 void tests(){
     bool cases[] = {
