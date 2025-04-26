@@ -40,6 +40,8 @@ bool isAlphanumeric(char c);
 bool isWhite(char c);
 bool strEq(string a, string b);
 bool strIn(string str, vector<string> lis);
+void printIndents(int indents);
+void printToken(Token token, int indents);
 
 // outputs the end of the next token given a position and a fsm function
 int eot(string str, int i, int (*fsm)(int, char));
@@ -66,8 +68,22 @@ int parseSubroutineBody(vector<Node>* parse, vector<Token> tokens, int idx);
 int parseVarDec(vector<Node>* parse, vector<Token> tokens, int idx);
 
 // Statements:
+int parseStatements(vector<Node>* parse, vector<Token> tokens, int idx);
+int parseStatement(vector<Node>* parse, vector<Token> tokens, int idx);
+int parseLet(vector<Node>* parse, vector<Token> tokens, int idx);
+int parseIf(vector<Node>* parse, vector<Token> tokens, int idx);
+int parseWhile(vector<Node>* parse, vector<Token> tokens, int idx);
+int parseDo(vector<Node>* parse, vector<Token> tokens, int idx);
+int parseReturn(vector<Node>* parse, vector<Token> tokens, int idx);
 
-
+// Expressions:
+int parseExpression(vector<Node>* parse, vector<Token> tokens, int idx);
+int parseTerm(vector<Node>* parse, vector<Token> tokens, int idx);
+int parseSubroutineCall(vector<Node>* parse, vector<Token> tokens, int idx);
+int parseExpressionList(vector<Node>* parse, vector<Token> tokens, int idx);
+int parseOp(vector<Node>* parse, vector<Token> tokens, int idx);
+int parseUnaryOp(vector<Node>* parse, vector<Token> tokens, int idx);
+int parseKeywordConstant(vector<Node>* parse, vector<Token> tokens, int idx);
 
 void tests();
 
@@ -106,9 +122,10 @@ int main() {
         // line and block comments
         if (file[i] == '/' && (file[i+1] == '/' || file[i+1] == '*')){
             int end = eot(file, i, fsm_com);
-            int len = end - i;
-            string newToken = file.substr(i, len);
-            tokens.push_back({"comment", newToken});
+            // decided I don't want comments as a token for the parser functionality
+            // int len = end - i;
+            // string newToken = file.substr(i, len);
+            // tokens.push_back({"comment", newToken});
             i = end;
         }
         // checking for symbols
@@ -153,17 +170,21 @@ int main() {
         }
     }
 
+    // printing to test lexer
     for (Token t : tokens){
-        string type = t.type;
-        string tok = t.tok;
-        cout << '<' << type << "> " << tok << '\n';
+        printToken(t, 1);
     }
 
 
-    
     // start of parser
     vector<Node> parse;
 
+    i = 0;
+    while (i < tokens.size()){
+        i = parseClass(&parse, tokens, i);
+    }
+
+    stack<Node> syntax;
     
     tests();
 
@@ -197,6 +218,20 @@ bool strIn(string str, vector<string> lis){
         }
     }
     return false;
+}
+
+void printIndents(int indents){
+    for (int i = 0; i < indents; i += 1){
+        cout << '\t';
+    }
+}
+
+void printToken(Token token, int indents){
+    printIndents(indents);
+
+    cout << '<' << token.type << "> ";
+    cout << token.tok << ' ';
+    cout << "</" << token.type << ">\n";
 }
 
 // tokenizer functions:
@@ -285,6 +320,8 @@ int fsm_bs(int state, char c){
 }
 
 // parser fucntions:
+// Program Structure:
+
 int parseClass(vector<Node>* parse, vector<Token> tokens, int idx){
     Node newParse = Node("class");
     // class className '{'
@@ -405,6 +442,12 @@ int parseSubroutineBody(vector<Node>* parse, vector<Token> tokens, int idx){
     idx = parseStatements(&newParse.vals, tokens, idx);
 
     // the closing '}'
+    newParse.vals.push_back(Node(tokens[idx]));
+    idx += 1;
+
+    (*parse).push_back(newParse);
+
+    return idx;
 }
 
 int parseVarDec(vector<Node>* parse, vector<Token> tokens, int idx){
@@ -417,11 +460,380 @@ int parseVarDec(vector<Node>* parse, vector<Token> tokens, int idx){
     }
 
     // if there is more than one variable declared:
-    while (strEq()
+    while (!strEq(tokens[idx].tok, ";")){
+        // ',' varName
+        for (int i = 0; i < 2; i += 1){
+            newParse.vals.push_back(Node(tokens[idx]));
+            idx += 1;
+        }
+    }
 
     // the ending ';'
     newParse.vals.push_back(Node(tokens[idx]));
     idx += 1;
+
+    (*parse).push_back(newParse);
+
+    return idx;
+}
+
+// Statements:
+
+int parseStatements(vector<Node>* parse, vector<Token> tokens, int idx){
+    Node newParse = Node("statements");
+
+    // all possible types of statements
+    vector<string> statementTypes = {"let", "if", "while", "do", "return"};
+
+    while (strIn(tokens[idx].tok, statementTypes)){
+        idx = parseStatement(&newParse.vals, tokens, idx);
+    }
+
+    (*parse).push_back(newParse);
+
+    return idx;
+}
+
+int parseStatement(vector<Node>* parse, vector<Token> tokens, int idx){
+    // the current token should be the type of statement we are parsing (ex. "let", "while"...)
+    string statementType = tokens[idx].tok;
+    Node newParse = Node(statementType + "Statement"); 
+
+    if (strEq(statementType, "let")){
+        idx = parseLet(&newParse.vals, tokens, idx);
+    }
+    else if (strEq(statementType, "if")){
+        idx = parseIf(&newParse.vals, tokens, idx);
+    }
+    else if (strEq(statementType, "while")){
+        idx = parseWhile(&newParse.vals, tokens, idx);
+    }
+    else if (strEq(statementType, "do")){
+        idx = parseDo(&newParse.vals, tokens, idx);
+    }
+    else if (strEq(statementType, "return")){
+        idx = parseReturn(&newParse.vals, tokens, idx);
+    }
+
+    (*parse).push_back(newParse);
+
+    return idx;
+}
+
+// For the specific kinds of statements, we do not need to create a new node at the start since we can
+// add to the "parse" passed into the arguments that was created in the "parseStatement" function
+int parseLet(vector<Node>* parse, vector<Token> tokens, int idx){
+    // 'let' varName
+    for (int i = 0; i < 2; i += 1){
+        (*parse).push_back(Node(tokens[idx]));
+        idx += 1;
+    }
+
+    // if there is: '[' expression ']'
+    if (strEq(tokens[idx].tok, "[")){
+        (*parse).push_back(Node(tokens[idx]));
+        idx += 1;
+
+        idx = parseExpression(parse, tokens, idx);
+
+        (*parse).push_back(Node(tokens[idx]));
+        idx += 1;
+    }
+
+    // the '=' that assigns value
+    (*parse).push_back(Node(tokens[idx]));
+    idx += 1;
+
+    // the expression being assigned
+    idx = parseExpression(parse, tokens, idx);
+
+    // the ending ';'
+    (*parse).push_back(Node(tokens[idx]));
+    idx += 1;
+
+    return idx;
+}
+
+int parseIf(vector<Node>* parse, vector<Token> tokens, int idx){
+    // 'if' '('
+    for (int i = 0; i < 2; i += 1){
+        (*parse).push_back(Node(tokens[idx]));
+        idx += 1;
+    }
+
+    // conditional expression
+    idx = parseExpression(parse, tokens, idx);
+
+    // ')' '{'
+    for (int i = 0; i < 2; i += 1){
+        (*parse).push_back(Node(tokens[idx]));
+        idx += 1;
+    }
+
+    // statements
+    idx = parseStatements(parse, tokens, idx);
+
+    // ending '}'
+    (*parse).push_back(Node(tokens[idx]));
+    idx += 1;
+
+    // if there is an else statement:
+    if (strEq(tokens[idx].tok, "else")){
+        // else '{'
+        for (int i = 0; i < 2; i += 1){
+            (*parse).push_back(Node(tokens[idx]));
+            idx += 1;
+        }
+
+        // statements
+        idx = parseStatements(parse, tokens, idx);
+
+        // '}'
+        (*parse).push_back(Node(tokens[idx]));
+        idx += 1;
+    }
+
+    return idx;
+}
+
+int parseWhile(vector<Node>* parse, vector<Token> tokens, int idx){
+    // 'while' '('
+    for (int i = 0; i < 2; i += 1){
+        (*parse).push_back(Node(tokens[idx]));
+        idx += 1;
+    }
+
+    // conditional expression
+    idx = parseExpression(parse, tokens, idx);
+
+    // ')' '{'
+    for (int i = 0; i < 2; i += 1){
+        (*parse).push_back(Node(tokens[idx]));
+        idx += 1;
+    }
+
+    // statements
+    idx = parseStatements(parse, tokens, idx);
+
+    // ending '}'
+    (*parse).push_back(Node(tokens[idx]));
+    idx += 1;
+
+    return idx;
+}
+
+int parseDo(vector<Node>* parse, vector<Token> tokens, int idx){
+    // 'do'
+    (*parse).push_back(Node(tokens[idx]));
+    idx += 1;
+
+    // subroutineCall
+    idx = parseSubroutineCall(parse, tokens, idx);
+    
+    // ending ';'
+    (*parse).push_back(Node(tokens[idx]));
+    idx += 1;
+
+    return idx;
+}
+
+int parseReturn(vector<Node>* parse, vector<Token> tokens, int idx){
+    // return
+    (*parse).push_back(Node(tokens[idx]));
+    idx += 1;
+
+    // if there is an expression after
+    if (!strEq(tokens[idx].tok, ";")){
+        idx = parseExpression(parse, tokens, idx);
+    }
+
+    // ending ';'
+    (*parse).push_back(Node(tokens[idx]));
+    idx += 1;
+
+    return idx;
+}
+
+// Expressions
+int parseExpression(vector<Node>* parse, vector<Token> tokens, int idx){
+    Node newParse = Node("expression");
+
+    // list of all ops:
+    vector<string> ops = {"+", "-", "*", "/", "&", "|", "<", ">", "="};
+    
+    // first term
+    newParse.vals.push_back(Node(tokens[idx]));
+    idx += 1;
+
+    // if there is (op term) that follows
+    while (strIn(tokens[idx].tok, ops)){
+        idx = parseOp(&newParse.vals, tokens, idx);
+        idx = parseTerm(&newParse.vals, tokens, idx);
+    }
+
+    (*parse).push_back(newParse);
+
+    return idx;
+}
+
+int parseTerm(vector<Node>* parse, vector<Token> tokens, int idx){
+    Node newParse = Node("term");
+    
+    string termType = tokens[idx].type;
+    string termTok = tokens[idx].tok;
+    vector<string> keyConsts = {"true", "false", "null", "this"};
+    vector<string> uniOps = {"-", "~"};
+
+    // a whole buncha conditionals for each type of term
+    // integerConstant
+    if (strEq(termType, "integerConstant")){
+        Node intConst = Node("integerConstant");
+        intConst.vals.push_back(Node(tokens[idx].tok));
+        newParse.vals.push_back(intConst);
+        idx += 1;
+    }
+    // StringConstant
+    else if (strEq(termType, "StringConstant")){
+        Node strConst = Node("StringConstant");
+        strConst.vals.push_back(Node(tokens[idx].tok));
+        newParse.vals.push_back(strConst);
+        idx += 1;
+    }
+    // keywordConstant
+    else if (strIn(termTok, keyConsts)){
+        Node keyConst = Node("keywordConstant");
+        keyConst.vals.push_back(Node(tokens[idx].tok));
+        newParse.vals.push_back(keyConst);
+        idx += 1;
+    }
+    // identifier
+    else if (strEq(termType, "identifier")){
+        // varName or subroutineCall
+        newParse.vals.push_back(Node(tokens[idx]));
+        idx += 1;
+
+        // in the case of varName '[' expression ']'
+        if (strEq(tokens[idx].tok, "[")){
+            for (int i = 0; i < 2; i += 1){
+                newParse.vals.push_back(Node(tokens[idx]));
+                idx += 1;
+            }
+
+            idx = parseExpression(&newParse.vals, tokens, idx);
+
+            newParse.vals.push_back(Node(tokens[idx]));
+            idx += 1;
+        }
+        // in the case of subroutineCall
+        else if (strEq(tokens[idx].tok, "(")){
+            // reset back so you can subroutineCall
+            idx -= 1;
+            newParse.vals.clear();
+
+            idx = parseSubroutineCall(&newParse.vals, tokens, idx);
+        }
+    }
+    // '(' expression ')'
+    else if (strEq(termTok, "(")){
+        // '('
+        newParse.vals.push_back(Node(tokens[idx]));
+        idx += 1;
+
+        // expression
+        idx = parseExpression(&newParse.vals, tokens, idx);
+
+        // ')'
+        newParse.vals.push_back(Node(tokens[idx]));
+        idx += 1;
+    }
+    // unaryOp term
+    else if (strIn(termType, uniOps)){
+        idx = parseUnaryOp(&newParse.vals, tokens, idx);
+        idx = parseTerm(&newParse.vals, tokens, idx);
+    }
+
+    return idx;
+}
+
+int parseSubroutineCall(vector<Node>* parse, vector<Token> tokens, int idx){
+    // subroutineName / className
+    (*parse).push_back(Node(tokens[idx]));
+    idx += 1;
+
+    // in the case of: className '.' (subroutine stuff)
+    if (strEq(tokens[idx].tok, ".")){
+        // '.' subroutineName
+        for (int i = 0; i < 2; i += 1){
+            (*parse).push_back(Node(tokens[idx]));
+            idx += 1;
+        }
+    }
+
+    // '{'
+    (*parse).push_back(Node(tokens[idx]));
+    idx += 1;
+
+    // expressionList
+    idx = parseExpressionList(parse, tokens, idx);
+
+    // '}'
+    (*parse).push_back(Node(tokens[idx]));
+    idx += 1;
+
+    return idx;
+}
+
+int parseExpressionList(vector<Node>* parse, vector<Token> tokens, int idx){
+    Node newParse = Node("expressionList");
+
+    // all expressionLists end in ')' so we can keep going until we find one
+    while (!strEq(tokens[idx].tok, ")")){
+        // expression
+        idx = parseExpression(&newParse.vals, tokens, idx);
+
+        // possible ',' after for another expression
+        if (strEq(tokens[idx].tok, ",")){
+            newParse.vals.push_back(Node(tokens[idx]));
+            idx += 1;
+        }
+    }
+
+    (*parse).push_back(newParse);
+
+    return idx;
+}
+
+int parseOp(vector<Node>* parse, vector<Token> tokens, int idx){
+    Node newParse = Node("op");
+    
+    newParse.vals.push_back(Node(tokens[idx]));
+    idx += 1;
+
+    (*parse).push_back(newParse);
+
+    return idx;
+}
+
+int parseUnaryOp(vector<Node>* parse, vector<Token> tokens, int idx){
+    Node newParse = Node("unaryOp");
+    
+    newParse.vals.push_back(Node(tokens[idx]));
+    idx += 1;
+
+    (*parse).push_back(newParse);
+
+    return idx;
+}
+
+int parseKeywordConstant(vector<Node>* parse, vector<Token> tokens, int idx){
+    Node newParse = Node("keywordConstant");
+    
+    newParse.vals.push_back(Node(tokens[idx]));
+    idx += 1;
+
+    (*parse).push_back(newParse);
+
+    return idx;
 }
 
 void tests(){
