@@ -7,6 +7,17 @@ using namespace std;
 struct Token {
     string type; // the type of the token
     string tok; // the actual token
+    
+    // default constructor
+    Token(){
+        return;
+    }
+
+    // main constructor
+    Token(string newType, string newTok){
+        type = newType;
+        tok = newTok;
+    }
 };
 
 // struct for the recursive rules, basically allowing for two typed list
@@ -42,6 +53,7 @@ bool strEq(string a, string b);
 bool strIn(string str, vector<string> lis);
 void printIndents(int indents);
 void printToken(Token token, int indents);
+void printNode(Node node, int depth);
 
 // outputs the end of the next token given a position and a fsm function
 int eot(string str, int i, int (*fsm)(int, char));
@@ -131,7 +143,7 @@ int main() {
         // checking for symbols
         else if (symbols.count(file[i])){
             string newToken = file.substr(i, 1);
-            tokens.push_back({"symbol", newToken});
+            tokens.push_back(Token("symbol", newToken));
             i = i + 1;
         }
         // identifiers or keywords
@@ -149,7 +161,7 @@ int main() {
                 type = "identifier";
             }
 
-            tokens.push_back({type, newToken});
+            tokens.push_back(Token(type, newToken));
             i = end;
         }
         // string constants
@@ -157,7 +169,7 @@ int main() {
             int end = eot(file, i, fsm_str);
             int len = end - i;
             string newToken = file.substr(i, len);
-            tokens.push_back({"StringConstant", newToken});
+            tokens.push_back(Token("StringConstant", newToken));
             i = end;
         }
         // integer constants
@@ -165,15 +177,15 @@ int main() {
             int end = eot(file, i, fsm_int);
             int len = end - i;
             string newToken = file.substr(i, len );
-            tokens.push_back({"integerConstant", newToken});
+            tokens.push_back(Token("integerConstant", newToken));
             i = end;
         }
     }
 
     // printing to test lexer
-    for (Token t : tokens){
-        printToken(t, 1);
-    }
+    // for (Token t : tokens){
+    //     printToken(t, 1);
+    // }
 
 
     // start of parser
@@ -184,7 +196,9 @@ int main() {
         i = parseClass(&parse, tokens, i);
     }
 
-    stack<Node> syntax;
+    for (Node node : parse){
+        printNode(node, 0);
+    }
     
     tests();
 
@@ -228,10 +242,29 @@ void printIndents(int indents){
 
 void printToken(Token token, int indents){
     printIndents(indents);
-
     cout << '<' << token.type << "> ";
     cout << token.tok << ' ';
     cout << "</" << token.type << ">\n";
+}
+
+
+void printNode(Node node, int depth){
+    string type = node.type;
+    // basically using dfs to traverse the parse tree and print
+    if (strEq(type, "token")){
+        printToken(node.token, depth);
+    }
+    else {
+        printIndents(depth);
+        cout << "<" + type + ">\n";
+
+        for (Node child : node.vals){
+            printNode(child, depth + 1);
+        }
+
+        printIndents(depth);
+        cout << "</" + type + ">\n"; 
+    }
 }
 
 // tokenizer functions:
@@ -662,8 +695,7 @@ int parseExpression(vector<Node>* parse, vector<Token> tokens, int idx){
     vector<string> ops = {"+", "-", "*", "/", "&", "|", "<", ">", "="};
     
     // first term
-    newParse.vals.push_back(Node(tokens[idx]));
-    idx += 1;
+    idx = parseTerm(&newParse.vals, tokens, idx);
 
     // if there is (op term) that follows
     while (strIn(tokens[idx].tok, ops)){
@@ -688,21 +720,20 @@ int parseTerm(vector<Node>* parse, vector<Token> tokens, int idx){
     // integerConstant
     if (strEq(termType, "integerConstant")){
         Node intConst = Node("integerConstant");
-        intConst.vals.push_back(Node(tokens[idx].tok));
+        intConst.vals.push_back(Node(tokens[idx]));
         newParse.vals.push_back(intConst);
         idx += 1;
     }
     // StringConstant
     else if (strEq(termType, "StringConstant")){
         Node strConst = Node("StringConstant");
-        strConst.vals.push_back(Node(tokens[idx].tok));
+        strConst.vals.push_back(Node(tokens[idx]));
         newParse.vals.push_back(strConst);
         idx += 1;
     }
     // keywordConstant
     else if (strIn(termTok, keyConsts)){
-        Node keyConst = Node("keywordConstant");
-        keyConst.vals.push_back(Node(tokens[idx].tok));
+        Node keyConst = Node(tokens[idx]);
         newParse.vals.push_back(keyConst);
         idx += 1;
     }
@@ -714,21 +745,22 @@ int parseTerm(vector<Node>* parse, vector<Token> tokens, int idx){
 
         // in the case of varName '[' expression ']'
         if (strEq(tokens[idx].tok, "[")){
-            for (int i = 0; i < 2; i += 1){
-                newParse.vals.push_back(Node(tokens[idx]));
-                idx += 1;
-            }
+            // '['
+            newParse.vals.push_back(Node(tokens[idx]));
+            idx += 1;
 
+            // expression
             idx = parseExpression(&newParse.vals, tokens, idx);
 
+            // ']'
             newParse.vals.push_back(Node(tokens[idx]));
             idx += 1;
         }
         // in the case of subroutineCall
-        else if (strEq(tokens[idx].tok, "(")){
+        else if (strIn(tokens[idx].tok, {"(", "."})){
             // reset back so you can subroutineCall
             idx -= 1;
-            newParse.vals.clear();
+            newParse.vals.pop_back();
 
             idx = parseSubroutineCall(&newParse.vals, tokens, idx);
         }
@@ -751,6 +783,8 @@ int parseTerm(vector<Node>* parse, vector<Token> tokens, int idx){
         idx = parseUnaryOp(&newParse.vals, tokens, idx);
         idx = parseTerm(&newParse.vals, tokens, idx);
     }
+
+    (*parse).push_back(newParse);
 
     return idx;
 }
@@ -779,6 +813,8 @@ int parseSubroutineCall(vector<Node>* parse, vector<Token> tokens, int idx){
     // '}'
     (*parse).push_back(Node(tokens[idx]));
     idx += 1;
+
+
 
     return idx;
 }

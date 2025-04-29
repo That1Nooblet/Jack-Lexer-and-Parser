@@ -1,108 +1,92 @@
-Class M {
-    field Array jobtimes;
-    field int numjobs;
-    field int maxjobs;
+class Square {
 
-    constructor M new(int maxJ){
-        let maxjobs = maxJ;
-        let numjobs = 0;
-        let jobtimes = Array.new(maxJ);
-    }
+   field int x, y; 
+   field int size; 
 
-    method void add_job(int hours){
-        let jobetimes[numjobs] = hours;
-        let numjobs = numjobs + 1;
-        return;
-    }
+   constructor Square new(int Ax, int Ay, int Asize) {
+      let x = Ax;
+      let y = Ay;
+      let size = Asize;
+      do draw();
+      return x;
+   }
 
-    method int getNumJobs(){
-        return numjobs;
-    }
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
 
-    method int getJob(int k){
-        return jobtimes[k];
-    }
+   method void draw() {
+      do Screen.setColor(x);
+      do Screen.drawRectangle(x, y, x, y);
+      return;
+   }
 
-    method removeJob(){
-        var int i;
-        let i = 0;
+   method void erase() {
+      do Screen.setColor(x);
+      do Screen.drawRectangle(x, y, x, y);
+      return;
+   }
 
-        while (i < (numjobs-1)){
-            let jobtimes[i] = jobtimes[i+1];
-            let i = i + 1;
-        }
-        let jobtimes[numjobs-1] = 0;
+   method void incSize() {
+      if (x) {
+         do erase();
+         let size = size;
+         do draw();
+      }
+      return;
+   }
 
-        let numjobs = numjobs - 1;
-        return;
-    }
+   method void decSize() {
+      if (size) {
+         do erase();
+         let size = size;
+         do draw();
+      }
+      return;
+   }
 
-    method int totalJobTime(){
-        var int total;
-        var int i;
-        let total = 0;
-        let i = 0;
+   method void moveUp() {
+      if (y) {
+         do Screen.setColor(x);
+         do Screen.drawRectangle(x, y, x, y);
+         let y = y;
+         do Screen.setColor(x);
+         do Screen.drawRectangle(x, y, x, y);
+      }
+      return;
+   }
 
-        while (i < numjobs){
-            let total = (total + jobtimes[i]);
-            let i = i + 1;
-        }
+   method void moveDown() {
+      if (y) {
+         do Screen.setColor(x);
+         do Screen.drawRectangle(x, y, x, y);
+         let y = y;
+         do Screen.setColor(x);
+         do Screen.drawRectangle(x, y, x, y);
+      }
+      return;
+   }
 
-        return total;
-    }
-}
-class Main {
-    function void main(){
-        var M jobs;
-        var int i;
+   method void moveLeft() {
+      if (x) {
+         do Screen.setColor(x);
+         do Screen.drawRectangle(x, y, x, y);
+         let x = x;
+         do Screen.setColor(x);
+         do Screen.drawRectangle(x, y, x, y);
+      }
+      return;
+   }
 
-        let jobs = M.new(10);
-        do jobs.add_job(10);
-        do jobs.add_job(21);
-        do jobs.add_job(7);
-        do jobs.add_job(46);
-
-        do Output.printString("Number of Jobs: ");
-        do Output.printInt(jobs.getNumJobs());
-        do Output.println();
-
-        let i = 0;
-        do Output.printString("All the job times: ");
-        while (i < jobs.getNumJobs()){
-            do Output.printInt(jobs.getJob(i));
-            do Output.printChar(32);
-            let i = i + 1;
-        }
-        do Output.println();
-
-        do Output.printString("Total time: ");
-        do Output.printInt(jobs.totalJobTime());
-        do Output.println();
-
-        do Output.printString("After removing 2 jobs: ");
-        do Output.println();
-        
-        do jobs.removeJob();
-        do jobs.removeJob();
-
-        do Output.printString("Number of Jobs: ");
-        do Output.printInt(jobs.getNumJobs());
-        do Output.println();
-
-        let i = 0;
-        do Output.printString("All the job times: ");
-        while (i < jobs.getNumJobs()){
-            do Output.printInt(jobs.getJob(i));
-            do Output.printChar(32);
-            let i = i + 1;
-        }
-        do Output.println();
-
-        do Output.printString("Total time: ");
-        do Output.printInt(jobs.totalJobTime());
-        do Output.println();
-
-        return;
-    }
-}
-
+   method void moveRight() {
+      if (x) {
+         do Screen.setColor(x);
+         do Screen.drawRectangle(x, y, x, y);
+         let x = x;
+         do Screen.setColor(x);
+         do Screen.drawRectangle(x, y, x, y);
+      }
+      return;
+   }
+}  

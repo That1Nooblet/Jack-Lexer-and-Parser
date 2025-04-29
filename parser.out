@@ -1,537 +1,967 @@
-<identifier> Class
-<identifier> M
-<symbol> {
-<keyword> field
-<identifier> Array
-<identifier> jobtimes
-<symbol> ;
-<keyword> field
-<keyword> int
-<identifier> numjobs
-<symbol> ;
-<keyword> field
-<keyword> int
-<identifier> maxjobs
-<symbol> ;
-<keyword> constructor
-<identifier> M
-<identifier> new
-<symbol> (
-<keyword> int
-<identifier> maxJ
-<symbol> )
-<symbol> {
-<keyword> let
-<identifier> maxjobs
-<symbol> =
-<identifier> maxJ
-<symbol> ;
-<keyword> let
-<identifier> numjobs
-<symbol> =
-<integerConstant> 0
-<symbol> ;
-<keyword> let
-<identifier> jobtimes
-<symbol> =
-<identifier> Array
-<symbol> .
-<identifier> new
-<symbol> (
-<identifier> maxJ
-<symbol> )
-<symbol> ;
-<symbol> }
-<keyword> method
-<keyword> void
-<identifier> add_job
-<symbol> (
-<keyword> int
-<identifier> hours
-<symbol> )
-<symbol> {
-<keyword> let
-<identifier> jobetimes
-<symbol> [
-<identifier> numjobs
-<symbol> ]
-<symbol> =
-<identifier> hours
-<symbol> ;
-<keyword> let
-<identifier> numjobs
-<symbol> =
-<identifier> numjobs
-<symbol> +
-<integerConstant> 1
-<symbol> ;
-<keyword> return
-<symbol> ;
-<symbol> }
-<keyword> method
-<keyword> int
-<identifier> getNumJobs
-<symbol> (
-<symbol> )
-<symbol> {
-<keyword> return
-<identifier> numjobs
-<symbol> ;
-<symbol> }
-<keyword> method
-<keyword> int
-<identifier> getJob
-<symbol> (
-<keyword> int
-<identifier> k
-<symbol> )
-<symbol> {
-<keyword> return
-<identifier> jobtimes
-<symbol> [
-<identifier> k
-<symbol> ]
-<symbol> ;
-<symbol> }
-<keyword> method
-<identifier> removeJob
-<symbol> (
-<symbol> )
-<symbol> {
-<keyword> var
-<keyword> int
-<identifier> i
-<symbol> ;
-<keyword> let
-<identifier> i
-<symbol> =
-<integerConstant> 0
-<symbol> ;
-<keyword> while
-<symbol> (
-<identifier> i
-<symbol> <
-<symbol> (
-<identifier> numjobs
-<symbol> -
-<integerConstant> 1
-<symbol> )
-<symbol> )
-<symbol> {
-<keyword> let
-<identifier> jobtimes
-<symbol> [
-<identifier> i
-<symbol> ]
-<symbol> =
-<identifier> jobtimes
-<symbol> [
-<identifier> i
-<symbol> +
-<integerConstant> 1
-<symbol> ]
-<symbol> ;
-<keyword> let
-<identifier> i
-<symbol> =
-<identifier> i
-<symbol> +
-<integerConstant> 1
-<symbol> ;
-<symbol> }
-<keyword> let
-<identifier> jobtimes
-<symbol> [
-<identifier> numjobs
-<symbol> -
-<integerConstant> 1
-<symbol> ]
-<symbol> =
-<integerConstant> 0
-<symbol> ;
-<keyword> let
-<identifier> numjobs
-<symbol> =
-<identifier> numjobs
-<symbol> -
-<integerConstant> 1
-<symbol> ;
-<keyword> return
-<symbol> ;
-<symbol> }
-<keyword> method
-<keyword> int
-<identifier> totalJobTime
-<symbol> (
-<symbol> )
-<symbol> {
-<keyword> var
-<keyword> int
-<identifier> total
-<symbol> ;
-<keyword> var
-<keyword> int
-<identifier> i
-<symbol> ;
-<keyword> let
-<identifier> total
-<symbol> =
-<integerConstant> 0
-<symbol> ;
-<keyword> let
-<identifier> i
-<symbol> =
-<integerConstant> 0
-<symbol> ;
-<keyword> while
-<symbol> (
-<identifier> i
-<symbol> <
-<identifier> numjobs
-<symbol> )
-<symbol> {
-<keyword> let
-<identifier> total
-<symbol> =
-<symbol> (
-<identifier> total
-<symbol> +
-<identifier> jobtimes
-<symbol> [
-<identifier> i
-<symbol> ]
-<symbol> )
-<symbol> ;
-<keyword> let
-<identifier> i
-<symbol> =
-<identifier> i
-<symbol> +
-<integerConstant> 1
-<symbol> ;
-<symbol> }
-<keyword> return
-<identifier> total
-<symbol> ;
-<symbol> }
-<symbol> }
-<keyword> class
-<identifier> Main
-<symbol> {
-<keyword> function
-<keyword> void
-<identifier> main
-<symbol> (
-<symbol> )
-<symbol> {
-<keyword> var
-<identifier> M
-<identifier> jobs
-<symbol> ;
-<keyword> var
-<keyword> int
-<identifier> i
-<symbol> ;
-<keyword> let
-<identifier> jobs
-<symbol> =
-<identifier> M
-<symbol> .
-<identifier> new
-<symbol> (
-<integerConstant> 10
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> jobs
-<symbol> .
-<identifier> add_job
-<symbol> (
-<integerConstant> 10
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> jobs
-<symbol> .
-<identifier> add_job
-<symbol> (
-<integerConstant> 21
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> jobs
-<symbol> .
-<identifier> add_job
-<symbol> (
-<integerConstant> 7
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> jobs
-<symbol> .
-<identifier> add_job
-<symbol> (
-<integerConstant> 46
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> printString
-<symbol> (
-<StringConstant> "Number of Jobs: "
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> printInt
-<symbol> (
-<identifier> jobs
-<symbol> .
-<identifier> getNumJobs
-<symbol> (
-<symbol> )
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> println
-<symbol> (
-<symbol> )
-<symbol> ;
-<keyword> let
-<identifier> i
-<symbol> =
-<integerConstant> 0
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> printString
-<symbol> (
-<StringConstant> "All the job times: "
-<symbol> )
-<symbol> ;
-<keyword> while
-<symbol> (
-<identifier> i
-<symbol> <
-<identifier> jobs
-<symbol> .
-<identifier> getNumJobs
-<symbol> (
-<symbol> )
-<symbol> )
-<symbol> {
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> printInt
-<symbol> (
-<identifier> jobs
-<symbol> .
-<identifier> getJob
-<symbol> (
-<identifier> i
-<symbol> )
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> printChar
-<symbol> (
-<integerConstant> 32
-<symbol> )
-<symbol> ;
-<keyword> let
-<identifier> i
-<symbol> =
-<identifier> i
-<symbol> +
-<integerConstant> 1
-<symbol> ;
-<symbol> }
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> println
-<symbol> (
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> printString
-<symbol> (
-<StringConstant> "Total time: "
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> printInt
-<symbol> (
-<identifier> jobs
-<symbol> .
-<identifier> totalJobTime
-<symbol> (
-<symbol> )
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> println
-<symbol> (
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> printString
-<symbol> (
-<StringConstant> "After removing 2 jobs: "
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> println
-<symbol> (
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> jobs
-<symbol> .
-<identifier> removeJob
-<symbol> (
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> jobs
-<symbol> .
-<identifier> removeJob
-<symbol> (
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> printString
-<symbol> (
-<StringConstant> "Number of Jobs: "
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> printInt
-<symbol> (
-<identifier> jobs
-<symbol> .
-<identifier> getNumJobs
-<symbol> (
-<symbol> )
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> println
-<symbol> (
-<symbol> )
-<symbol> ;
-<keyword> let
-<identifier> i
-<symbol> =
-<integerConstant> 0
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> printString
-<symbol> (
-<StringConstant> "All the job times: "
-<symbol> )
-<symbol> ;
-<keyword> while
-<symbol> (
-<identifier> i
-<symbol> <
-<identifier> jobs
-<symbol> .
-<identifier> getNumJobs
-<symbol> (
-<symbol> )
-<symbol> )
-<symbol> {
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> printInt
-<symbol> (
-<identifier> jobs
-<symbol> .
-<identifier> getJob
-<symbol> (
-<identifier> i
-<symbol> )
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> printChar
-<symbol> (
-<integerConstant> 32
-<symbol> )
-<symbol> ;
-<keyword> let
-<identifier> i
-<symbol> =
-<identifier> i
-<symbol> +
-<integerConstant> 1
-<symbol> ;
-<symbol> }
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> println
-<symbol> (
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> printString
-<symbol> (
-<StringConstant> "Total time: "
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> printInt
-<symbol> (
-<identifier> jobs
-<symbol> .
-<identifier> totalJobTime
-<symbol> (
-<symbol> )
-<symbol> )
-<symbol> ;
-<keyword> do
-<identifier> Output
-<symbol> .
-<identifier> println
-<symbol> (
-<symbol> )
-<symbol> ;
-<keyword> return
-<symbol> ;
-<symbol> }
-<symbol> }
+<class>
+	<keyword> class </keyword>
+	<identifier> Square </identifier>
+	<symbol> { </symbol>
+	<classVarDec>
+		<keyword> field </keyword>
+		<keyword> int </keyword>
+		<identifier> x </identifier>
+		<symbol> , </symbol>
+		<identifier> y </identifier>
+		<symbol> ; </symbol>
+	</classVarDec>
+	<classVarDec>
+		<keyword> field </keyword>
+		<keyword> int </keyword>
+		<identifier> size </identifier>
+		<symbol> ; </symbol>
+	</classVarDec>
+	<subroutineDec>
+		<keyword> constructor </keyword>
+		<identifier> Square </identifier>
+		<identifier> new </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+			<keyword> int </keyword>
+			<identifier> Ax </identifier>
+			<symbol> , </symbol>
+			<keyword> int </keyword>
+			<identifier> Ay </identifier>
+			<symbol> , </symbol>
+			<keyword> int </keyword>
+			<identifier> Asize </identifier>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<statements>
+				<letStatement>
+					<keyword> let </keyword>
+					<identifier> x </identifier>
+					<symbol> = </symbol>
+					<expression>
+						<term>
+							<identifier> Ax </identifier>
+						</term>
+					</expression>
+					<symbol> ; </symbol>
+				</letStatement>
+				<letStatement>
+					<keyword> let </keyword>
+					<identifier> y </identifier>
+					<symbol> = </symbol>
+					<expression>
+						<term>
+							<identifier> Ay </identifier>
+						</term>
+					</expression>
+					<symbol> ; </symbol>
+				</letStatement>
+				<letStatement>
+					<keyword> let </keyword>
+					<identifier> size </identifier>
+					<symbol> = </symbol>
+					<expression>
+						<term>
+							<identifier> Asize </identifier>
+						</term>
+					</expression>
+					<symbol> ; </symbol>
+				</letStatement>
+				<doStatement>
+					<keyword> do </keyword>
+					<identifier> draw </identifier>
+					<symbol> ( </symbol>
+					<expressionList>
+					</expressionList>
+					<symbol> ) </symbol>
+					<symbol> ; </symbol>
+				</doStatement>
+				<returnStatement>
+					<keyword> return </keyword>
+					<expression>
+						<term>
+							<identifier> x </identifier>
+						</term>
+					</expression>
+					<symbol> ; </symbol>
+				</returnStatement>
+			</statements>
+			<symbol> } </symbol>
+		</subroutineBody>
+	</subroutineDec>
+	<subroutineDec>
+		<keyword> method </keyword>
+		<keyword> void </keyword>
+		<identifier> dispose </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<statements>
+				<doStatement>
+					<keyword> do </keyword>
+					<identifier> Memory </identifier>
+					<symbol> . </symbol>
+					<identifier> deAlloc </identifier>
+					<symbol> ( </symbol>
+					<expressionList>
+						<expression>
+							<term>
+								<keyword> this </keyword>
+							</term>
+						</expression>
+					</expressionList>
+					<symbol> ) </symbol>
+					<symbol> ; </symbol>
+				</doStatement>
+				<returnStatement>
+					<keyword> return </keyword>
+					<symbol> ; </symbol>
+				</returnStatement>
+			</statements>
+			<symbol> } </symbol>
+		</subroutineBody>
+	</subroutineDec>
+	<subroutineDec>
+		<keyword> method </keyword>
+		<keyword> void </keyword>
+		<identifier> draw </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<statements>
+				<doStatement>
+					<keyword> do </keyword>
+					<identifier> Screen </identifier>
+					<symbol> . </symbol>
+					<identifier> setColor </identifier>
+					<symbol> ( </symbol>
+					<expressionList>
+						<expression>
+							<term>
+								<identifier> x </identifier>
+							</term>
+						</expression>
+					</expressionList>
+					<symbol> ) </symbol>
+					<symbol> ; </symbol>
+				</doStatement>
+				<doStatement>
+					<keyword> do </keyword>
+					<identifier> Screen </identifier>
+					<symbol> . </symbol>
+					<identifier> drawRectangle </identifier>
+					<symbol> ( </symbol>
+					<expressionList>
+						<expression>
+							<term>
+								<identifier> x </identifier>
+							</term>
+						</expression>
+						<symbol> , </symbol>
+						<expression>
+							<term>
+								<identifier> y </identifier>
+							</term>
+						</expression>
+						<symbol> , </symbol>
+						<expression>
+							<term>
+								<identifier> x </identifier>
+							</term>
+						</expression>
+						<symbol> , </symbol>
+						<expression>
+							<term>
+								<identifier> y </identifier>
+							</term>
+						</expression>
+					</expressionList>
+					<symbol> ) </symbol>
+					<symbol> ; </symbol>
+				</doStatement>
+				<returnStatement>
+					<keyword> return </keyword>
+					<symbol> ; </symbol>
+				</returnStatement>
+			</statements>
+			<symbol> } </symbol>
+		</subroutineBody>
+	</subroutineDec>
+	<subroutineDec>
+		<keyword> method </keyword>
+		<keyword> void </keyword>
+		<identifier> erase </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<statements>
+				<doStatement>
+					<keyword> do </keyword>
+					<identifier> Screen </identifier>
+					<symbol> . </symbol>
+					<identifier> setColor </identifier>
+					<symbol> ( </symbol>
+					<expressionList>
+						<expression>
+							<term>
+								<identifier> x </identifier>
+							</term>
+						</expression>
+					</expressionList>
+					<symbol> ) </symbol>
+					<symbol> ; </symbol>
+				</doStatement>
+				<doStatement>
+					<keyword> do </keyword>
+					<identifier> Screen </identifier>
+					<symbol> . </symbol>
+					<identifier> drawRectangle </identifier>
+					<symbol> ( </symbol>
+					<expressionList>
+						<expression>
+							<term>
+								<identifier> x </identifier>
+							</term>
+						</expression>
+						<symbol> , </symbol>
+						<expression>
+							<term>
+								<identifier> y </identifier>
+							</term>
+						</expression>
+						<symbol> , </symbol>
+						<expression>
+							<term>
+								<identifier> x </identifier>
+							</term>
+						</expression>
+						<symbol> , </symbol>
+						<expression>
+							<term>
+								<identifier> y </identifier>
+							</term>
+						</expression>
+					</expressionList>
+					<symbol> ) </symbol>
+					<symbol> ; </symbol>
+				</doStatement>
+				<returnStatement>
+					<keyword> return </keyword>
+					<symbol> ; </symbol>
+				</returnStatement>
+			</statements>
+			<symbol> } </symbol>
+		</subroutineBody>
+	</subroutineDec>
+	<subroutineDec>
+		<keyword> method </keyword>
+		<keyword> void </keyword>
+		<identifier> incSize </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<statements>
+				<ifStatement>
+					<keyword> if </keyword>
+					<symbol> ( </symbol>
+					<expression>
+						<term>
+							<identifier> x </identifier>
+						</term>
+					</expression>
+					<symbol> ) </symbol>
+					<symbol> { </symbol>
+					<statements>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> erase </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+						<letStatement>
+							<keyword> let </keyword>
+							<identifier> size </identifier>
+							<symbol> = </symbol>
+							<expression>
+								<term>
+									<identifier> size </identifier>
+								</term>
+							</expression>
+							<symbol> ; </symbol>
+						</letStatement>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> draw </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+					</statements>
+					<symbol> } </symbol>
+				</ifStatement>
+				<returnStatement>
+					<keyword> return </keyword>
+					<symbol> ; </symbol>
+				</returnStatement>
+			</statements>
+			<symbol> } </symbol>
+		</subroutineBody>
+	</subroutineDec>
+	<subroutineDec>
+		<keyword> method </keyword>
+		<keyword> void </keyword>
+		<identifier> decSize </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<statements>
+				<ifStatement>
+					<keyword> if </keyword>
+					<symbol> ( </symbol>
+					<expression>
+						<term>
+							<identifier> size </identifier>
+						</term>
+					</expression>
+					<symbol> ) </symbol>
+					<symbol> { </symbol>
+					<statements>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> erase </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+						<letStatement>
+							<keyword> let </keyword>
+							<identifier> size </identifier>
+							<symbol> = </symbol>
+							<expression>
+								<term>
+									<identifier> size </identifier>
+								</term>
+							</expression>
+							<symbol> ; </symbol>
+						</letStatement>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> draw </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+					</statements>
+					<symbol> } </symbol>
+				</ifStatement>
+				<returnStatement>
+					<keyword> return </keyword>
+					<symbol> ; </symbol>
+				</returnStatement>
+			</statements>
+			<symbol> } </symbol>
+		</subroutineBody>
+	</subroutineDec>
+	<subroutineDec>
+		<keyword> method </keyword>
+		<keyword> void </keyword>
+		<identifier> moveUp </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<statements>
+				<ifStatement>
+					<keyword> if </keyword>
+					<symbol> ( </symbol>
+					<expression>
+						<term>
+							<identifier> y </identifier>
+						</term>
+					</expression>
+					<symbol> ) </symbol>
+					<symbol> { </symbol>
+					<statements>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> Screen </identifier>
+							<symbol> . </symbol>
+							<identifier> setColor </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> Screen </identifier>
+							<symbol> . </symbol>
+							<identifier> drawRectangle </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> y </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> y </identifier>
+									</term>
+								</expression>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+						<letStatement>
+							<keyword> let </keyword>
+							<identifier> y </identifier>
+							<symbol> = </symbol>
+							<expression>
+								<term>
+									<identifier> y </identifier>
+								</term>
+							</expression>
+							<symbol> ; </symbol>
+						</letStatement>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> Screen </identifier>
+							<symbol> . </symbol>
+							<identifier> setColor </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> Screen </identifier>
+							<symbol> . </symbol>
+							<identifier> drawRectangle </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> y </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> y </identifier>
+									</term>
+								</expression>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+					</statements>
+					<symbol> } </symbol>
+				</ifStatement>
+				<returnStatement>
+					<keyword> return </keyword>
+					<symbol> ; </symbol>
+				</returnStatement>
+			</statements>
+			<symbol> } </symbol>
+		</subroutineBody>
+	</subroutineDec>
+	<subroutineDec>
+		<keyword> method </keyword>
+		<keyword> void </keyword>
+		<identifier> moveDown </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<statements>
+				<ifStatement>
+					<keyword> if </keyword>
+					<symbol> ( </symbol>
+					<expression>
+						<term>
+							<identifier> y </identifier>
+						</term>
+					</expression>
+					<symbol> ) </symbol>
+					<symbol> { </symbol>
+					<statements>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> Screen </identifier>
+							<symbol> . </symbol>
+							<identifier> setColor </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> Screen </identifier>
+							<symbol> . </symbol>
+							<identifier> drawRectangle </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> y </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> y </identifier>
+									</term>
+								</expression>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+						<letStatement>
+							<keyword> let </keyword>
+							<identifier> y </identifier>
+							<symbol> = </symbol>
+							<expression>
+								<term>
+									<identifier> y </identifier>
+								</term>
+							</expression>
+							<symbol> ; </symbol>
+						</letStatement>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> Screen </identifier>
+							<symbol> . </symbol>
+							<identifier> setColor </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> Screen </identifier>
+							<symbol> . </symbol>
+							<identifier> drawRectangle </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> y </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> y </identifier>
+									</term>
+								</expression>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+					</statements>
+					<symbol> } </symbol>
+				</ifStatement>
+				<returnStatement>
+					<keyword> return </keyword>
+					<symbol> ; </symbol>
+				</returnStatement>
+			</statements>
+			<symbol> } </symbol>
+		</subroutineBody>
+	</subroutineDec>
+	<subroutineDec>
+		<keyword> method </keyword>
+		<keyword> void </keyword>
+		<identifier> moveLeft </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<statements>
+				<ifStatement>
+					<keyword> if </keyword>
+					<symbol> ( </symbol>
+					<expression>
+						<term>
+							<identifier> x </identifier>
+						</term>
+					</expression>
+					<symbol> ) </symbol>
+					<symbol> { </symbol>
+					<statements>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> Screen </identifier>
+							<symbol> . </symbol>
+							<identifier> setColor </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> Screen </identifier>
+							<symbol> . </symbol>
+							<identifier> drawRectangle </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> y </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> y </identifier>
+									</term>
+								</expression>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+						<letStatement>
+							<keyword> let </keyword>
+							<identifier> x </identifier>
+							<symbol> = </symbol>
+							<expression>
+								<term>
+									<identifier> x </identifier>
+								</term>
+							</expression>
+							<symbol> ; </symbol>
+						</letStatement>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> Screen </identifier>
+							<symbol> . </symbol>
+							<identifier> setColor </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> Screen </identifier>
+							<symbol> . </symbol>
+							<identifier> drawRectangle </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> y </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> y </identifier>
+									</term>
+								</expression>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+					</statements>
+					<symbol> } </symbol>
+				</ifStatement>
+				<returnStatement>
+					<keyword> return </keyword>
+					<symbol> ; </symbol>
+				</returnStatement>
+			</statements>
+			<symbol> } </symbol>
+		</subroutineBody>
+	</subroutineDec>
+	<subroutineDec>
+		<keyword> method </keyword>
+		<keyword> void </keyword>
+		<identifier> moveRight </identifier>
+		<symbol> ( </symbol>
+		<parameterList>
+		</parameterList>
+		<symbol> ) </symbol>
+		<subroutineBody>
+			<symbol> { </symbol>
+			<statements>
+				<ifStatement>
+					<keyword> if </keyword>
+					<symbol> ( </symbol>
+					<expression>
+						<term>
+							<identifier> x </identifier>
+						</term>
+					</expression>
+					<symbol> ) </symbol>
+					<symbol> { </symbol>
+					<statements>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> Screen </identifier>
+							<symbol> . </symbol>
+							<identifier> setColor </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> Screen </identifier>
+							<symbol> . </symbol>
+							<identifier> drawRectangle </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> y </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> y </identifier>
+									</term>
+								</expression>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+						<letStatement>
+							<keyword> let </keyword>
+							<identifier> x </identifier>
+							<symbol> = </symbol>
+							<expression>
+								<term>
+									<identifier> x </identifier>
+								</term>
+							</expression>
+							<symbol> ; </symbol>
+						</letStatement>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> Screen </identifier>
+							<symbol> . </symbol>
+							<identifier> setColor </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+						<doStatement>
+							<keyword> do </keyword>
+							<identifier> Screen </identifier>
+							<symbol> . </symbol>
+							<identifier> drawRectangle </identifier>
+							<symbol> ( </symbol>
+							<expressionList>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> y </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> x </identifier>
+									</term>
+								</expression>
+								<symbol> , </symbol>
+								<expression>
+									<term>
+										<identifier> y </identifier>
+									</term>
+								</expression>
+							</expressionList>
+							<symbol> ) </symbol>
+							<symbol> ; </symbol>
+						</doStatement>
+					</statements>
+					<symbol> } </symbol>
+				</ifStatement>
+				<returnStatement>
+					<keyword> return </keyword>
+					<symbol> ; </symbol>
+				</returnStatement>
+			</statements>
+			<symbol> } </symbol>
+		</subroutineBody>
+	</subroutineDec>
+	<symbol> } </symbol>
+</class>
